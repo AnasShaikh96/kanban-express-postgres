@@ -1,12 +1,6 @@
 import pool from "../config/db.ts"
 
 
-export const getAllTenantService = async () => {
-    const result = await pool.query(`SELECT * FROM tenants`);
-    return result.rows[0]
-}
-
-
 export const createTenantService = async (name, plan) => {
     const result = await pool.query('INSERT INTO tenants (name, current_plan) VALUES ($1, $2) RETURNING *', [name, plan]);
     return result.rows[0]

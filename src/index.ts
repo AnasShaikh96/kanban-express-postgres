@@ -14,16 +14,16 @@ app.use(cors());
 // MIDDLEWARES
 
 // ROUTES
-app.use('/api', tenantRoutes)
-
-// ERROR HANDLING
-app.use(errorHandler)
+app.use('/api/v1', tenantRoutes)
 
 // DB CONNECTION
-app.use('/', async (req, res) => {
+app.use('/health', async (req, res) => {
     const result = await pool.query('SELECT current_database()');
     res.status(200).send(`Your db details are ${result.rows[0].current_database}`)
 })
+
+// ERROR HANDLING
+app.use(errorHandler)
 
 app.listen(config.port, () => {
     console.log('Server is up on :', config.port)
