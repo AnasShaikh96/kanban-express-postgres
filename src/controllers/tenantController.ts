@@ -1,13 +1,9 @@
-import type { NextFunction } from "express"
+import type { Request, Response, NextFunction } from "express"
 import { createTenantService, deleteTenantService, getTenantService, updateTenantService } from "../models/tenantModel.ts"
+import { AppError } from "../middlewares/errorHandler.ts"
+import { sendResponse } from "../utils/response.ts"
 
-const handleResponse = (res: Response, status: number, message: string, data: any = null) => {
-    return res.status(status).json({
-        status,
-        message,
-        data
-    })
-}
+const handleResponse = sendResponse
 
 
 
@@ -25,16 +21,11 @@ export const createTenant = async (req: Request, res: Response, next: NextFuncti
 
 export const getTenantById = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { id } = req.params
+    const { id } = req.params as { id: string }
     try {
         const tenant = await getTenantService(id);
 
-        if (!tenant) {
-            res.status(404).json({
-                status: 404,
-                message: 'Tenant not found.'
-            })
-        }
+        if (!tenant) return next(new AppError('Tenant not found.', 404))
 
         handleResponse(res, 200, 'Tenant fetched Succesfully', tenant)
 
@@ -45,17 +36,12 @@ export const getTenantById = async (req: Request, res: Response, next: NextFunct
 
 export const updateTenantById = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { name, plan } = req.body;
-    const { id } = req.params
+    const { name, plan } = req.body as { name: string; plan: string };
+    const { id } = req.params as { id: string }
     try {
         const updateTenant = await updateTenantService(name, plan, id);
 
-        if (!updateTenant) {
-            res.status(404).json({
-                status: 404,
-                message: 'Tenant not found.'
-            })
-        }
+        if (!updateTenant) return next(new AppError('Tenant not found.', 404))
 
         handleResponse(res, 200, 'Tenant updated Succesfully', updateTenant)
 
@@ -66,18 +52,12 @@ export const updateTenantById = async (req: Request, res: Response, next: NextFu
 
 export const deleteTenantById = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { id } = req.params
+    const { id } = req.params as { id: string }
     try {
-        const tenant = await deleteTenantService(id);
+        const result = await deleteTenantService(id);
+        if (result.rowCount === 0) return next(new AppError('Tenant not found.', 404))
 
-        // if (!tenant) {
-        //     res.status(404).json({
-        //         status: 404,
-        //         message: 'Tenant not found.'
-        //     })
-        // }
-
-        handleResponse(res, 200, 'Tenant deleted Succesfully', tenant)
+        handleResponse(res, 200, 'Tenant deleted Succesfully')
 
     } catch (error) {
         next(error)

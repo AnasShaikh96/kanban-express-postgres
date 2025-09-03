@@ -3,7 +3,7 @@ import cors from "cors"
 import config from "./config/config.ts";
 import { errorHandler } from "./middlewares/errorHandler.ts";
 import tenantRoutes from './routes/tenantRoutes.ts'
-import pool from "./config/db.ts";
+import { dbHealthCheck } from "./config/db.ts";
 
 const app = express();
 
@@ -16,10 +16,10 @@ app.use(cors());
 // ROUTES
 app.use('/api/v1', tenantRoutes)
 
-// DB CONNECTION
-app.use('/health', async (req, res) => {
-    const result = await pool.query('SELECT current_database()');
-    res.status(200).send(`Your db details are ${result.rows[0].current_database}`)
+// HEALTH
+app.get('/health', async (req, res) => {
+    const dbOk = await dbHealthCheck();
+    res.status(dbOk ? 200 : 503).json({ status: dbOk ? 'ok' : 'degraded' });
 })
 
 // ERROR HANDLING
