@@ -10,11 +10,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// DB CONNECTION
-app.use('/', async (req, res) => {
-    const result = await pool.query('SELECT current_database()');
-    res.status(200).send(`Your db details are ${result.rows[0].current_database}`)
-})
 
 // MIDDLEWARES
 
@@ -24,6 +19,11 @@ app.use('/api', tenantRoutes)
 // ERROR HANDLING
 app.use(errorHandler)
 
+// DB CONNECTION
+app.use('/', async (req, res) => {
+    const result = await pool.query('SELECT current_database()');
+    res.status(200).send(`Your db details are ${result.rows[0].current_database}`)
+})
 
 app.listen(config.port, () => {
     console.log('Server is up on :', config.port)
