@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { createUserService, deleteUserService, getAllUserService, getUserService, updateUserService } from "../models/userModel.ts";
+import { createUserService, deleteUserService, getAllUserService, getUserService, partialUpdateUserService, updateUserService } from "../models/userModel.ts";
 import { sendResponse } from "../utils/response.ts";
 import { AppError } from "../middlewares/errorHandler.ts";
 
@@ -47,12 +47,9 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
 
 export const updateUserById = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const { tenant_id, email, role, password_hash } = req.body
-
     try {
 
-        const updateUser = await updateUserService(tenant_id, email, password_hash, role, id);
-        // if (!updateUser) return next(new AppError('User not found.', 404))
+        const updateUser = await partialUpdateUserService(id, req.body)
         sendResponse(res, 200, 'User updated successfully', updateUser);
 
     } catch (error) {
@@ -65,9 +62,7 @@ export const deleteUserById = async (req: Request, res: Response, next: NextFunc
     const { id } = req.params;
 
     try {
-
         const updateUser = await deleteUserService(id);
-        // if (!updateUser) return next(new AppError('User not found.', 404))
         sendResponse(res, 200, 'User deleted successfully', updateUser);
 
     } catch (error) {

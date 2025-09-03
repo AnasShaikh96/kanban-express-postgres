@@ -18,7 +18,7 @@ const createUserSchema = Joi.object({
 router.get('/user', getAllUsers)
 router.post('/user', validateBody(createUserSchema), createUser);
 router.get('/user/:id', getUserById);
-router.put('/user/:id', validateBody(createUserSchema), validateParams(idParam), updateUserById);
+router.patch('/user/:id', validateParams(idParam), updateUserById);
 router.delete('/user/:id', deleteUserById);
 
 

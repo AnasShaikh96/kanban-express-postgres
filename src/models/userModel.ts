@@ -34,6 +34,41 @@ export const updateUserService = async (
     return result.rows[0];
 }
 
+
+export const partialUpdateUserService = async (
+    id?: string,
+    updates?: Partial<Pick<User, "tenant_id" | "email" | "password_hash" | "role">>
+): Promise<User> => {
+    const setClauses: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    for (const [key, value] of Object.entries(updates ?? [])) {
+        setClauses.push(`${key}=$${idx}`);
+        values.push(value);
+        idx++;
+    }
+
+    if (setClauses.length === 0) {
+        throw new Error("No fields provided to update");
+    }
+
+    values.push(id);
+
+
+    console.log(``)
+
+    const query = `
+      UPDATE users
+      SET ${setClauses.join(", ")}
+      WHERE id=$${idx}
+      RETURNING *
+    `;
+
+    const result = await pool.query(query, values);
+    return result.rows[0];
+};
+
 export const deleteUserService = async (id?: string): Promise<User> => {
     const result = await pool.query('DELETE FROM users WHERE id=$1', [id]);
     return result.rows[0];
