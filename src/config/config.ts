@@ -12,6 +12,7 @@ const envSchema = Joi.object({
   DB_PASSWORD: Joi.string().allow('').required(),
   DB_DATABASE: Joi.string().required(),
   CORS_ORIGIN: Joi.string().optional(),
+  JWT_SECRET:Joi.string()
 }).unknown(true);
 
 const { value, error } = envSchema.validate(process.env);
@@ -30,6 +31,7 @@ const config = {
     password: String(value.DB_PASSWORD),
     database: String(value.DB_DATABASE),
   },
+  jwtSecret: String(value.JWT_SECRET),
   corsOrigin: value.CORS_ORIGIN || '*',
 };
 

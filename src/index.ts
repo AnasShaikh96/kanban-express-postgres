@@ -3,6 +3,7 @@ import cors from "cors"
 import config from "./config/config.ts";
 import { errorHandler } from "./middlewares/errorHandler.ts";
 import tenantRoutes from './routes/tenantRoutes.ts'
+import userRoutes from './routes/userRoutes.ts'
 import { dbHealthCheck } from "./config/db.ts";
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors());
 
 // ROUTES
 app.use('/api/v1', tenantRoutes)
+app.use('/api/v1', userRoutes)
 
 // HEALTH
 app.get('/health', async (req, res) => {

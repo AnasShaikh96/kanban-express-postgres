@@ -13,7 +13,7 @@ export const usersSchema = Joi.object({
     tenant_id: Joi.number().required(),
     email: Joi.string().email().required(),
     password_hash: Joi.string().required(),
-    current_role: Joi.string().valid('admin', 'manager', 'developer')
+    role: Joi.string().valid('admin', 'manager', 'developer')
 })
 
 
@@ -37,3 +37,8 @@ export const taskSchema = Joi.object({
     parent_task_id: Joi.number().integer().positive().allow(null),
     created_at: Joi.date() // default NOW()
 });
+
+
+export const idParam = Joi.object({
+  id: Joi.number().integer().positive().required(),
+})

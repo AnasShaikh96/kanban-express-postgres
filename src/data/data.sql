@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
     tenant_id INTEGER REFERENCES tenants (id),
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(100) NOT NULL,
-    current_role role,
+    role role,
     created_at TIMESTAMP DEFAULT NOW(),
 )
 

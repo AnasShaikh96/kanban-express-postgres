@@ -15,7 +15,10 @@ export const errorHandler = (err: unknown, req: Request, res: Response, next: Ne
     const status = isAppError ? err.statusCode : 500
     const message = isAppError ? err.message : 'Something went wrong!'
 
-    const details = process.env.NODE_ENV === 'development' && err instanceof Error ? err.message : undefined
+
+    console.log(err)
+
+    const details = err instanceof Error ? err.message : undefined
     res.status(status).json({
         status,
         message,
