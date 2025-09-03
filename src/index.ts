@@ -12,9 +12,7 @@ app.use(cors());
 
 // DB CONNECTION
 app.use('/', async (req, res) => {
-    console.log('here you are')
     const result = await pool.query('SELECT current_database()');
-
     res.status(200).send(`Your db details are ${result.rows[0].current_database}`)
 })
 
@@ -25,6 +23,7 @@ app.use('/api', tenantRoutes)
 
 // ERROR HANDLING
 app.use(errorHandler)
+
 
 app.listen(config.port, () => {
     console.log('Server is up on :', config.port)

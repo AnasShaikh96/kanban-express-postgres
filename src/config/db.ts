@@ -6,8 +6,6 @@ dotenv.config();
 
 const { Pool } = pkg
 
-console.log('hello')
-
 const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,

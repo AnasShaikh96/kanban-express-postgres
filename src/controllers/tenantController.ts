@@ -16,6 +16,8 @@ export const createTenant = async (req: Request, res: Response, next: NextFuncti
 
     try {
 
+        // const newUser = await
+
         handleResponse(res, 201, 'Tenant Created Succesfully', [])
 
     } catch (error) {
